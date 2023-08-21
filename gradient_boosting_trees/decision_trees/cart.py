@@ -1,7 +1,7 @@
 """
     CART REGRESSION TREE MODULE
 """
-from typing import Union, Tuple, Callable
+from typing import Tuple
 from gradient_boosting_trees.trees import Node
 import numpy as np
 
@@ -26,8 +26,8 @@ def find_best_split_feature(feature: np.array, labels: np.array) -> Tuple[int, f
         pred_rhs = rhs.mean()
         
         # mse split loss
-        lhs_loss = (lhs - pred_lhs) ** 2
-        rhs_loss = (rhs - pred_rhs) ** 2
+        lhs_loss = (lhs - pred_lhs)
+        rhs_loss = (rhs - pred_rhs)
         total_candidate_loss = np.sqrt(np.sum(lhs_loss) + np.sum(rhs_loss))
         
         # update_min_loss
@@ -69,14 +69,14 @@ def find_best_split(points: np.array, labels: np.array) -> Tuple[int, float, Tup
     return best_loss_feature, threshold_value, (lhs_points, lhs_labels), (rhs_points, rhs_labels)
     
 
+# TODO: Experiment with leaf-wise growth instead of level-wise growth
 class CartRegressionTree:
     """"""
     def __init__(self, max_level: int, min_points: int):
         self._max_level = max_level
         self._min_points = min_points
         self._root: Node = None
-        # self.predict = np.vectorize(self._predict)
-    
+
     def fit(self, points: np.array, labels: np.array) -> None:
         def recursive_cart_tree(points: np.array, labels: np.array, level: int = 0) -> Node:
             if level >= self._max_level or len(points) < self._min_points:
