@@ -28,7 +28,7 @@ def find_best_split_feature(feature: np.array, labels: np.array) -> Tuple[int, f
         # mse split loss
         lhs_loss = (lhs - pred_lhs)
         rhs_loss = (rhs - pred_rhs)
-        total_candidate_loss = np.sqrt(np.sum(lhs_loss) + np.sum(rhs_loss))
+        total_candidate_loss = np.sum(lhs_loss) + np.sum(rhs_loss)
         
         # update_min_loss
         if min_loss is None or total_candidate_loss < min_loss:
@@ -93,4 +93,4 @@ class CartRegressionTree:
         self._root = recursive_cart_tree(points=points, labels=labels)
     
     def predict(self, points: np.array) -> np.array:
-        return [self._root.traverse(point=point).value for point in points]
+        return np.array([self._root.traverse(point=point).value for point in points])
