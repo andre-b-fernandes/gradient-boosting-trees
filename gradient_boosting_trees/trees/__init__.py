@@ -1,4 +1,4 @@
-from typing import Tuple 
+from typing import Tuple
 import numpy as np
 
 
@@ -15,20 +15,20 @@ class Node:
             raise ValueError("Cannot create node with only one child.")
 
         self._threshold = threshold
-    
+
     @property
     def value(self) -> float:
         return self._threshold
-    
+
     @property
     def is_leaf(self) -> bool:
         """"""
         return self._left is None and self._right is None
-    
+
     def __iter__(self):
         yield from self._left
         yield from self._right
-    
+
     def traverse(self, point: np.array) -> "Node":
         if self.is_leaf:
             return self
