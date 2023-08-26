@@ -1,13 +1,22 @@
-"""
-    CART REGRESSION TREE MODULE
-"""
 from typing import Tuple
-from gradient_boosting_trees.trees import Node
+from collections import namedtuple
 import numpy as np
 
+FeatureSplit = namedtuple("FeatureSplit", "idx, threshold_value, min_loss")
+HandSide = namedtuple("HandSide", "points labels")
 
-def find_best_split_feature(feature: np.array, labels: np.array) -> Tuple[int, float, float]:
-    """"""
+def find_best_split_feature(feature: np.array, labels: np.array) -> FeatureSplit:
+    """
+        A function which finds the best split point for a feature.
+        Performs a gready search for the lowest loss point on the lhs and rhs
+        residuals.
+
+        Arguments:
+            feature: np.array The feature points (1-D numpy array)
+            labels: np.array The label values (1-D numpy array)
+        Returns:
+            A FeatureSplit tuple (idx, threshold_value, min_loss)
+    """
     min_loss = None
     treshold_idx = None
     treshold_value = None
@@ -36,9 +45,19 @@ def find_best_split_feature(feature: np.array, labels: np.array) -> Tuple[int, f
             treshold_idx = candidate_treshold_idx
             treshold_value = candidate_treshold_value
 
-    return treshold_idx, treshold_value, min_loss
+    return FeatureSplit(treshold_idx, treshold_value, min_loss)
 
-def find_best_split(points: np.array, labels: np.array) -> Tuple[int, float, Tuple[np.array, np.array], Tuple[np.array, np.array]]:
+def find_best_split(points: np.array, labels: np.array) -> Tuple[FeatureSplit, HandSide, HandSide]:
+    """
+        A function which finds the best split feature using a grready search for the feature which
+        minimizes the residual loss.
+        
+        Arguments:
+            points: np.array All the features and their data points. point values X features
+            labels: np.array Label values with 1-D array
+        Returns:
+            Tuple[FeatureSplit, HandSide, HandSide] A tuple with the best feature split, the lhs and rhs values
+    """
     sorted_idx = points.argsort(axis=0)
     _, n_features = points.shape
 
@@ -52,7 +71,8 @@ def find_best_split(points: np.array, labels: np.array) -> Tuple[int, float, Tup
         feature_sorted_idx = sorted_idx[:, feature_idx]
         candidate_idx, candidate_value, candidate_ft_loss = find_best_split_feature(feature=feature[feature_sorted_idx], labels=labels[feature_sorted_idx])
         
-        if min_feature_loss is None or candidate_ft_loss <= min_feature_loss:
+        if min_feature_loss is None or candidate_ft_loss < min_feature_loss:
+            min_feature_loss = candidate_ft_loss
             best_loss_feature = feature_idx
             threshold_idx = candidate_idx
             threshold_value = candidate_value
@@ -65,32 +85,11 @@ def find_best_split(points: np.array, labels: np.array) -> Tuple[int, float, Tup
 
     lhs_points, lhs_labels = sorted_points[:threshold_idx], sorted_labels[:threshold_idx]
     rhs_points, rhs_labels = sorted_points[threshold_idx:], sorted_labels[threshold_idx:]
-
-    return best_loss_feature, threshold_value, (lhs_points, lhs_labels), (rhs_points, rhs_labels)
     
+    feature_split = FeatureSplit(best_loss_feature, threshold_value, min_feature_loss)
+    lhs = HandSide(lhs_points, lhs_labels)
+    rhs = HandSide(rhs_points, rhs_labels)
 
-# TODO: Experiment with leaf-wise growth instead of level-wise growth
-class CartRegressionTree:
-    """"""
-    def __init__(self, max_level: int, min_points: int):
-        self._max_level = max_level
-        self._min_points = min_points
-        self._root: Node = None
+    return feature_split, lhs, rhs
 
-    def fit(self, points: np.array, labels: np.array) -> None:
-        def recursive_cart_tree(points: np.array, labels: np.array, level: int = 0) -> Node:
-            if level >= self._max_level or len(points) < self._min_points:
-                return Node(threshold=labels.mean())
 
-            feature_idx, threshold_value, lhs, rhs = find_best_split(points=points, labels=labels)
-            lhs_points, lhs_labels = lhs
-            rhs_points, rhs_labels = rhs
-
-            left = recursive_cart_tree(points=lhs_points, labels=lhs_labels, level=level+1)
-            right = recursive_cart_tree(points=rhs_points, labels=rhs_labels, level=level+1)
-            return Node(split=(feature_idx, left, right), threshold=threshold_value)
-
-        self._root = recursive_cart_tree(points=points, labels=labels)
-    
-    def predict(self, points: np.array) -> np.array:
-        return np.array([self._root.traverse(point=point).value for point in points])
