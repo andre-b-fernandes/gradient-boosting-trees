@@ -85,10 +85,13 @@ def find_best_split(
             threshold_idx = candidate_idx
             threshold_value = candidate_value
 
+    # select sorted idx of winner feature
     bst_lss_ft_srt_idx = sorted_idx[:, best_loss_feature]
+    # reorg points and labels by the idx of winning sequence
     sorted_points = points[bst_lss_ft_srt_idx]
     sorted_labels = labels[bst_lss_ft_srt_idx]
 
+    # lhs and rhs split by threshold idx of sorted sequence.
     lhs_points, lhs_labels = (
         sorted_points[:threshold_idx],
         sorted_labels[:threshold_idx],
@@ -98,6 +101,7 @@ def find_best_split(
         sorted_labels[threshold_idx:],
     )
 
+    # return feature spit, left and right split
     feature_split = FeatureSplit(best_loss_feature, threshold_value, min_feature_loss)
     lhs = HandSide(lhs_points, lhs_labels)
     rhs = HandSide(rhs_points, rhs_labels)

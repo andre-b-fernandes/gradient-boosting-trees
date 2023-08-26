@@ -26,8 +26,11 @@ class Node:
         return self._left is None and self._right is None
 
     def __iter__(self):
-        yield from self._left
-        yield from self._right
+        if self.is_leaf:
+            yield self
+        else:
+            yield from self._left
+            yield from self._right
 
     def traverse(self, point: np.array) -> "Node":
         if self.is_leaf:

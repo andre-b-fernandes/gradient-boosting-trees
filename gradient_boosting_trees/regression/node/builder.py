@@ -20,7 +20,7 @@ class NodeBuilder(ABC):
         self._min_points = min_points
 
     def build(self, points: np.array, labels: np.array) -> Node:
-        if self.should_stop(self, points=points):
+        if self.should_stop(points=points):
             return Node(threshold=labels.mean())
 
         return self.recursive_call(points=points, labels=labels)
