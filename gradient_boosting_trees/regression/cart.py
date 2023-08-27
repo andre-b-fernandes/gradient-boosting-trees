@@ -3,7 +3,7 @@
 """
 from typing import Tuple
 from gradient_boosting_trees.trees import Node
-from gradient_boosting_trees.regression.node.split import find_best_split
+from gradient_boosting_trees.regression.cart.split import find_best_split
 import numpy as np
 
 

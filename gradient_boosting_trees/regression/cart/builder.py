@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 from gradient_boosting_trees.trees import Node
-from gradient_boosting_trees.regression.node.split import find_best_split
+from gradient_boosting_trees.regression.cart.split import find_best_split
 
 
 class NodeBuilder(ABC):

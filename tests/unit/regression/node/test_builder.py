@@ -2,7 +2,7 @@ from typing import Tuple
 import pytest
 import numpy as np
 
-from gradient_boosting_trees.regression.node.builder import TreeLevelNodeBuilder
+from gradient_boosting_trees.regression.cart.builder import TreeLevelNodeBuilder
 from gradient_boosting_trees.trees import Node
 
 

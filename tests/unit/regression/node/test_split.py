@@ -2,7 +2,7 @@ from typing import Tuple
 import numpy as np
 import pytest
 
-from gradient_boosting_trees.regression.node.split import (
+from gradient_boosting_trees.regression.cart.split import (
     find_best_split_feature,
     find_best_split,
 )
