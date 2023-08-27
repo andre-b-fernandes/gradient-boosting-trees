@@ -26,7 +26,7 @@ class TreeLevelNodeBuilder(NodeBuilder):
     def should_stop(self, points: np.array) -> bool:
         return super().should_stop(points) or self._current_level > self._max_level
 
-    def recursive_call(self, points: np.array, labels: np.array) -> Node:
+    def recursive_call(self, points: np.ndarray, labels: np.ndarray) -> Node:
         """
         The function recursive call on building the tree level-wise. Overriding the
         parent class and finding the best feature split greadily.
