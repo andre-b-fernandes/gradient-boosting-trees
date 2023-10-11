@@ -30,3 +30,7 @@ class NodeBuilder(ABC):
 
     def should_stop(self, points: np.array) -> bool:
         return len(points) < self._min_points
+
+    @abstractmethod
+    def reset(self):
+        pass

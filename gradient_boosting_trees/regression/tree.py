@@ -13,4 +13,9 @@ class RegressionTree:
         self._root: Optional[Node] = None
 
     def fit(self, points: np.ndarray, labels: np.ndarray):
+        """"""
         self._root = self._builder.build(points=points, labels=labels)
+
+    def predict(self, points: np.array) -> np.array:
+        """"""
+        return np.array([self._root.traverse(point=point).value for point in points])

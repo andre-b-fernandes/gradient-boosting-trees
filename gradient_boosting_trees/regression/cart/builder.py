@@ -44,3 +44,6 @@ class TreeLevelNodeBuilder(NodeBuilder):
         left = self.build(points=lhs_points, labels=lhs_labels)
         right = self.build(points=rhs_points, labels=rhs_labels)
         return Node(split=(feature_idx, left, right), threshold=threshold_value)
+
+    def reset(self):
+        self._current_level = 0
