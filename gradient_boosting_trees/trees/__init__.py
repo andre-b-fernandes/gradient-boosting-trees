@@ -3,7 +3,18 @@ import numpy as np
 
 
 class Node:
+    """
+    A class which represents a Node belonging to a binary tree.
+    Can be a leaf if it has no children, but if it has children it necessarily
+    has 2 children, left and right.
+    Also contains a threshold, and a feature_idx provided in the split parameter.
+    The threshold is the provided threshold meant for split decisions, and the feature_idx
+    is the identifier of the feature this node belongs to.
+    The threshold can either act as a standard threshold or as a node value when it is a leaf.
+    """
+
     def __init__(self, threshold: float, split: Tuple[int, "Node", "Node"] = None):
+        """ """
         if split is None:
             split = (None, None, None)
 
@@ -22,7 +33,12 @@ class Node:
 
     @property
     def is_leaf(self) -> bool:
-        """"""
+        """
+        Wether this node is a tree leaf or not.
+
+        Returns:
+            bool: True if this node is a leaf, False otherwise.
+        """
         return self._left is None and self._right is None
 
     def __iter__(self):
@@ -33,6 +49,17 @@ class Node:
             yield from self._right
 
     def traverse(self, point: np.array) -> "Node":
+        """
+        Traverses the tree until it reaches a leaf node.
+        Will yield left or right nodes depending on the value of the point.
+        If less than the threshold, will yield left node, otherwise right node.
+
+        Args:
+            point: A numpy array representing a point in the feature space.
+
+        Returns:
+            Node: The next node reached by traversing the tree.
+        """
         if self.is_leaf:
             return self
 
