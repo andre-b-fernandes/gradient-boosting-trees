@@ -12,7 +12,7 @@ from gradient_boosting_trees.regression.cart.split import (
     "sample, expected",
     [("exponential_sample", (0, 2, 1.5)), ("cosine_sample", (0, 16, 15.5))],
 )
-def test_find_best_split_feature(sample: np.ndarray, expected: Tuple[float], request):
+def test_shoud_return_best_split_feature(sample: np.ndarray, expected: Tuple[float], request):
     sample = request.getfixturevalue(sample)
     feature, labels = sample
     feature_split = find_best_split_feature(feature=feature, labels=labels)
@@ -30,7 +30,7 @@ def test_find_best_split_feature(sample: np.ndarray, expected: Tuple[float], req
         ("cosine_sample_2d", (0, 0.9550000000000001, 0.0)),
     ],
 )
-def test_find_best_split(sample: np.ndarray, expected: Tuple[float], request):
+def test_should_return_best_split(sample: np.ndarray, expected: Tuple[float], request):
     sample = request.getfixturevalue(sample)
     x, y, labels = sample
     points = np.hstack([x.reshape(len(x), 1), y.reshape(len(y), 1)])

@@ -47,3 +47,11 @@ class TreeLevelNodeBuilder(NodeBuilder):
 
     def reset(self):
         self._current_level = 0
+
+
+class LeafwiseNodeBuilder(NodeBuilder):
+    def __init__(self, min_points: int, max_leaves: int) -> None:
+        """"""
+        super().__init__(min_points)
+        self._max_leaves = max_leaves
+        self._leaf_count = 0

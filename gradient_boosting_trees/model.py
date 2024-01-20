@@ -12,23 +12,31 @@ from gradient_boosting_trees.regression.tree import RegressionTree
 
 AVAILABLE_OPTOBJECTIVES = {
     "squared_error": squared_error_objective,
-    "log_loss": log_loss_derivative
+    "log_loss": log_loss_derivative,
 }
+
 
 @dataclass
 class GBParams:
-    shrinkage: float = 0.01 # learning rate
+    shrinkage: float = 0.01  # learning rate
 
 
 class GBRegressionTrees:
-    def __init__(self, params: GBParams, node_builder: NodeBuilder, objective: str = "squared_error"):
+    def __init__(
+        self,
+        params: GBParams,
+        node_builder: NodeBuilder,
+        objective: str = "squared_error",
+    ):
         self._params = params
         self._builder = node_builder
         self._weak_models: List[RegressionTree] = []
         try:
             self._objective = AVAILABLE_OPTOBJECTIVES[objective]
         except KeyError:
-            raise ValueError(f"Objective {objective} not available. Choose one of {AVAILABLE_OPTOBJECTIVES.keys()}")
+            raise ValueError(
+                f"Objective {objective} not available. Choose one of {AVAILABLE_OPTOBJECTIVES.keys()}"
+            )
 
     def fit(self, points: np.ndarray, labels: np.ndarray, n_iterations: int):
         """n_iters equals n_trees"""
@@ -44,5 +52,8 @@ class GBRegressionTrees:
             strong_predictions -= self._params.shrinkage * weak_predictions
 
     def predict(self, points: np.array) -> np.array:
-        generator = (wk_m.predict(points=points) * (self._params.shrinkage) for wk_m in self._weak_models)
+        generator = (
+            wk_m.predict(points=points) * (self._params.shrinkage)
+            for wk_m in self._weak_models
+        )
         return np.sum(generator)
