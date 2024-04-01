@@ -9,6 +9,7 @@ class TreeLevelNodeBuilder(NodeBuilder):
     """
     Tree level node builder. It will keep exploring both sides of the tree regardless
     of what they are until a maximum level depth has been reached.
+    It maintains a counter of the current level and the number of nodes created.
     """
 
     def __init__(self, min_moints: int, max_level: int) -> None:
@@ -43,15 +44,18 @@ class TreeLevelNodeBuilder(NodeBuilder):
         self._current_level += 1
         left = self.build(points=lhs_points, labels=lhs_labels)
         right = self.build(points=rhs_points, labels=rhs_labels)
-        return Node(split=(feature_idx, left, right), threshold=threshold_value)
+
+        return Node(node_id=self._node_count, split=(feature_idx, left, right), threshold=threshold_value)
 
     def reset(self):
+        super().reset()
         self._current_level = 0
 
 
-class LeafwiseNodeBuilder(NodeBuilder):
-    def __init__(self, min_points: int, max_leaves: int) -> None:
-        """"""
-        super().__init__(min_points)
-        self._max_leaves = max_leaves
-        self._leaf_count = 0
+# # FIXME: TODO
+# class LeafwiseNodeBuilder(NodeBuilder):
+#     def __init__(self, min_points: int, max_leaves: int) -> None:
+#         """"""
+#         super().__init__(min_points)
+#         self._max_leaves = max_leaves
+#         self._leaf_count = 0

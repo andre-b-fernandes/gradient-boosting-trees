@@ -25,7 +25,7 @@ def exponential_sample_2d() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
 
 
 @pytest.fixture()
-def cosine_sample_2d() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def cosine_sample2d() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     x = np.arange(20, step=0.01)
     y = np.arange(10, 30, step=0.01)
     return x, y, np.cos(x * y)

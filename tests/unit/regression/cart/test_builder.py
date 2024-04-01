@@ -24,14 +24,21 @@ class TestTreeLevelNodeBuilder:
         points = np.hstack([x.reshape(len(x), 1), y.reshape(len(y), 1)])
         return builder.build(points=points, labels=labels), builder
 
-    def test_binary_leaf_count(
-        self, min_points: int, max_level: int, cosine_sample_2d: np.ndarray
+    def test_number_of_leaves_should_be_multiple_of_two(
+        self, min_points: int, max_level: int, cosine_sample: np.ndarray
     ):
         node, _ = self._build(
-            min_points=min_points, max_level=max_level, sample=cosine_sample_2d
+            min_points=min_points, max_level=max_level, sample=cosine_sample
         )
         total_leaves = sum(1 if nd.is_leaf else 0 for nd in node)
         assert total_leaves % 2 == 0
+    
+    def test_all_nodes_should_have_different_ids(self, min_points: int, max_level: int, cosine_sample: np.ndarray):
+        node, _ = self._build(
+            min_points=min_points, max_level=max_level, sample=cosine_sample
+        )
+        ids = [nd.node_id for nd in node]
+        assert len(ids) == len(set(ids))
 
     def test_should_stop(self, min_points: int, max_level: int):
         builder = TreeLevelNodeBuilder(min_moints=min_points, max_level=max_level)

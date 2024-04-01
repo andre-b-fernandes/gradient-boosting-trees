@@ -11,9 +11,10 @@ class Node:
     The threshold is the provided threshold meant for split decisions, and the feature_idx
     is the identifier of the feature this node belongs to.
     The threshold can either act as a standard threshold or as a node value when it is a leaf.
+    A node also has a node_id which is a unique identifier for the node in the tree.
     """
 
-    def __init__(self, threshold: float, split: Tuple[int, "Node", "Node"] = None):
+    def __init__(self, node_id: int, threshold: float, split: Tuple[int, "Node", "Node"] = None):
         """ """
         if split is None:
             split = (None, None, None)
@@ -26,6 +27,7 @@ class Node:
             raise ValueError("Cannot create node with only one child.")
 
         self._threshold = threshold
+        self.node_id = node_id
 
     @property
     def value(self) -> float:

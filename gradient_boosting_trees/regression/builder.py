@@ -17,10 +17,13 @@ class NodeBuilder(ABC):
             min_points: int The number of minimum points a Node must have to be splitted.
         """
         self._min_points = min_points
+        self._node_count = 0
 
     def build(self, points: np.array, labels: np.array) -> Node:
         if self.should_stop(points=points):
-            return Node(threshold=labels.mean())
+            node_id = self._node_count
+            self._node_count += 1
+            return Node(node_id=node_id, threshold=labels.mean())
 
         return self.recursive_call(points=points, labels=labels)
 
@@ -31,6 +34,5 @@ class NodeBuilder(ABC):
     def should_stop(self, points: np.array) -> bool:
         return len(points) < self._min_points
 
-    @abstractmethod
     def reset(self):
-        pass
+        self._node_count = 0
